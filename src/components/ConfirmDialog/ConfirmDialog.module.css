@@ -1,0 +1,70 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 320px;
+  background: rgba(42, 42, 42, 0.95);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  backdrop-filter: blur(20px);
+  animation: fadeIn 0.25s ease;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  height: 44px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.cancelBtn {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+}
+
+.confirmBtn {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+.danger {
+  background: linear-gradient(135deg, #ff4d6a, #ff1744);
+}
