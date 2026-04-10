@@ -1,12 +1,43 @@
+/* ===== Header — Figma 239:499 ===== */
 .header {
-  padding: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
   padding-top: calc(var(--safe-top) + 16px);
+  background: rgba(14, 14, 14, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #f183ff;
+  margin: 0;
+}
+
+.headerDivider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(72, 72, 71, 0.15);
+}
+
+/* ===== Main content area — Figma 239:405 ===== */
+.main {
+  padding: 96px 16px 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .loading {
@@ -18,80 +49,127 @@
   font-size: 14px;
 }
 
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  gap: 8px;
-}
-
-.emptyIcon {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-
-.emptyText {
-  font-size: 17px;
-  font-weight: 600;
-}
-
-.emptyHint {
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
 .list {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.item {
+/* ===== Chat Item Wrapper ===== */
+.chatItemWrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  min-height: 112px;
+}
+
+/* ===== Delete Background — Figma 239:425 ===== */
+.deleteBg {
+  position: absolute;
+  inset: 0;
+  background: #a70138;
+  border-radius: 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  transition: background 0.15s;
+  justify-content: flex-end;
+  padding-right: 32px;
+  z-index: 0;
+}
+
+.deleteBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
   cursor: pointer;
-  min-height: 72px;
+  padding: 0;
+  transition: opacity 0.15s;
 }
 
-.item:active {
-  background: var(--bg-card);
+.deleteBtn:active {
+  opacity: 0.8;
 }
 
+.deleteText {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+/* ===== Chat Content (swipeable) — Figma 239:413 / 239:431 ===== */
+.chatContent {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: rgba(19, 19, 19, 0.95);
+  border-radius: 24px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+.chatContent:active {
+  background: rgba(19, 19, 19, 0.6);
+}
+
+/* Swiped state — Figma 239:431 */
+.chatContent.swiped {
+  background: #20201f;
+  border-left: 2px solid rgba(241, 131, 255, 0.4);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Avatar — 4:5 ratio, 64x80 ===== */
 .avatarWrapper {
   position: relative;
   flex-shrink: 0;
 }
 
+.avatarBorder {
+  width: 64px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
 .avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-md);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 7px;
 }
 
 .avatarPlaceholder {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-md);
+  width: 100%;
+  height: 100%;
   background: var(--bg-elevated);
+  border-radius: 7px;
 }
 
+/* Online dot — Figma 239:417 */
 .onlineDot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
+  top: -4px;
+  right: -4px;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  background: var(--accent-pink);
-  box-shadow: 0 0 8px rgba(241, 131, 255, 0.5);
-  border: 2px solid var(--bg-primary);
+  border-radius: 9999px;
+  background: #f183ff;
+  border: 2px solid #0e0e0e;
+  box-shadow: 0 0 8px rgba(241, 131, 255, 0.8);
 }
 
+/* ===== Text Info ===== */
 .info {
   flex: 1;
   min-width: 0;
@@ -102,37 +180,125 @@
 
 .topRow {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 }
 
 .name {
+  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.4px;
+}
+
+.time {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: #767575;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .preview {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #adaaaa;
+  line-height: 22.75px;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left;
 }
 
-.deleteBtn {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
+/* ===== Empty State ===== */
+.emptyContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: var(--text-muted);
-  flex-shrink: 0;
-  transition: all 0.15s;
+  padding: 80px 32px;
+  gap: 32px;
 }
 
-.deleteBtn:active {
-  background: rgba(255, 77, 106, 0.15);
-  color: #ff4d6a;
+.emptyVisual {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.emptyGlow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(241, 131, 255, 0.2) 0%, transparent 70%);
+  filter: blur(20px);
+}
+
+.emptyCircle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(241, 131, 255, 0.3);
+}
+
+.emptyCircleImg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #2a1a3a 0%, #1a0a2a 100%);
+}
+
+.emptyCircleOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(241, 131, 255, 0.15) 0%, transparent 60%);
+}
+
+.emptyTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyHeading {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0;
+}
+
+.emptySubtext {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-figma-secondary);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0;
+}
+
+.emptyCta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  background: var(--accent-gradient);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+  min-height: 48px;
+}
+
+.emptyCta:active {
+  transform: scale(0.96);
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useApp } from '../../store/appStore';
 import { useBackButton } from '../../hooks/useTelegram';
@@ -19,6 +19,11 @@ export default function CharacterDetailPage() {
   const role = state.role;
 
   const [selecting, setSelecting] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const atTopRef = useRef(false);
+  const pullStartY = useRef(0);
+  const isPulling = useRef(false);
 
   const handleBack = useCallback(() => {
     navigate(-1);
@@ -44,6 +49,31 @@ export default function CharacterDetailPage() {
     }
   };
 
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    atTopRef.current = scrollRef.current.scrollTop <= 0;
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (atTopRef.current) {
+      pullStartY.current = e.touches[0].clientY;
+      isPulling.current = true;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isPulling.current) return;
+    const diff = e.touches[0].clientY - pullStartY.current;
+    if (diff > 60) {
+      isPulling.current = false;
+      setExpanded(false);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isPulling.current = false;
+  };
+
   if (!role) {
     return (
       <div className={styles.container}>
@@ -57,81 +87,121 @@ export default function CharacterDetailPage() {
     );
   }
 
-  const imageUrl = role.role_description_image_url || role.role_image_url || role.avatar_url;
-  const tags = role.relationship_label
-    ? role.relationship_label.split(/[、,，/]/).map((t) => t.trim()).filter(Boolean)
-    : [];
+  const bgImage = role.role_image_url || role.avatar_url;
+  const tags = role.tags || [];
 
   return (
     <div className={styles.container}>
-      {/* Scrollable content */}
-      <div className={styles.scroll}>
-        {/* Character Image */}
-        <div className={styles.imageWrapper}>
-          {imageUrl ? (
-            <img
-              className={styles.image}
-              src={imageUrl}
-              alt={role.name}
-            />
-          ) : (
-            <div className={styles.placeholder} />
-          )}
-          <div className={styles.saturationOverlay} />
-          {/* Gradient at top for back button visibility */}
-          <div className={styles.topGradient} />
-          {/* Back button */}
-          <button className={styles.backBtn} onClick={handleBack} aria-label="Go back">
-            <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-              <path d="M9 1L1 9L9 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+      {/* Full-screen background image */}
+      <div className={styles.bgWrapper}>
+        {bgImage ? (
+          <img className={styles.bgImage} src={bgImage} alt="" />
+        ) : (
+          <div className={styles.bgPlaceholder} />
+        )}
+        <div className={styles.bgOverlay} />
+      </div>
+
+      {/* Fixed header bar */}
+      <header className={styles.header}>
+        <button className={styles.backBtn} onClick={handleBack} aria-label="Go back">
+          <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
+            <path d="M9 1L1 9L9 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <span className={styles.headerTitle}>{role.name}</span>
+      </header>
+
+      {/* Default view: name + tags + VIEW PROFILE button */}
+      <div className={`${styles.defaultBottom} ${expanded ? styles.hidden : ''}`}>
+        <h1 className={styles.nameDefault}>{role.name}</h1>
+        {tags.length > 0 && (
+          <div className={styles.tags}>
+            {tags.slice(0, 3).map((tag) => (
+              <span key={tag} className={styles.tag}>{tag.toUpperCase()}</span>
+            ))}
+          </div>
+        )}
+        <button className={styles.viewProfileBtn} onClick={() => setExpanded(true)}>
+          <span>VIEW PROFILE</span>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+            <path d="M1 6.5L6 1.5L11 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      {/* Expanded glass card */}
+      <div
+        className={`${styles.glassCard} ${expanded ? styles.expanded : ''}`}
+        ref={scrollRef}
+        onScroll={handleScroll}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Collapse chevron — Figma 205:1086 */}
+        <button className={styles.collapseBtn} onClick={() => setExpanded(false)} aria-label="Collapse">
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+            <path d="M1 1.5L6 6.5L11 1.5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
+        {/* Tags row */}
+        {tags.length > 0 && (
+          <div className={styles.tags}>
+            {tags.slice(0, 3).map((tag) => (
+              <span key={tag} className={styles.tag}>{tag.toUpperCase()}</span>
+            ))}
+          </div>
+        )}
+
+        {/* Name with level badge */}
+        <div className={styles.nameRow}>
+          <h1 className={styles.nameExpanded}>{role.name}</h1>
+          <span className={styles.levelBadge}>{role.relationship}</span>
         </div>
 
-        {/* Content */}
-        <div className={styles.content}>
-          {/* Name */}
-          <h1 className={styles.name}>{role.name}</h1>
+        {/* Biography section */}
+        <div className={styles.bioSection}>
+          <h3 className={styles.bioLabel}>Biography</h3>
 
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className={styles.tags}>
-              {tags.map((tag, i) => (
-                <span
-                  key={tag}
-                  className={i === 0 ? styles.tagSolid : styles.tagGlass}
-                >
-                  {tag}
+          {/* Stats grid */}
+          <div className={styles.statsGrid}>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>Occupation</span>
+              <span className={styles.statValue}>{role.relationship_label || 'Unknown'}</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>Intimacy</span>
+              <div className={styles.intimacyRow}>
+                <span className={styles.intimacyLevel}>
+                  Level<br />{role.relationship}
                 </span>
-              ))}
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${Math.min((role.relationship / 10) * 100, 100)}%` }}
+                  />
+                </div>
+              </div>
             </div>
-          )}
-
-          {/* Description — fully expanded, scrollable */}
-          {role.description && (
-            <div className={styles.description}>
-              <p>{role.description}</p>
-            </div>
-          )}
-
-          {/* Relationship */}
-          <div className={styles.relationship}>
-            <span className={styles.relationshipLabel}>Relationship</span>
-            <span className={styles.relationshipLevel}>
-              {role.relationship_label} — Lv.{role.relationship}
-            </span>
           </div>
+
+          {/* Description */}
+          {role.description && (
+            <p className={styles.description}>{role.description}</p>
+          )}
         </div>
       </div>
 
-      {/* Fixed bottom CTA */}
-      <div className={styles.cta}>
+      {/* Fixed floating CTA */}
+      <div className={styles.ctaWrapper}>
         <button
           className={styles.ctaBtn}
           onClick={handleStartChat}
           disabled={selecting}
         >
-          {selecting ? 'Starting...' : 'Start Chat'}
+          {selecting ? 'Starting...' : 'Start Chatting'}
         </button>
       </div>
     </div>

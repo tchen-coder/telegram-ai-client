@@ -30,6 +30,7 @@ export interface Role {
   role_image_url: string;
   role_description_image_url: string;
   chat_background_image_url: string | null;
+  tags: string[];
   role_images: RoleImage[];
   is_current?: boolean;
   latest_reply?: string;

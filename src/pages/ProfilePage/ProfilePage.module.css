@@ -1,156 +1,439 @@
-.profile {
+/* ===== Main Container — Figma 233:78 ===== */
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 96px 24px 128px;
+}
+
+/* ===== Profile Header ===== */
+.headerSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 16px 24px;
-  padding-top: calc(var(--safe-top) + 32px);
-  gap: 8px;
+  isolation: isolate;
+  width: 100%;
 }
 
-.avatarWrapper {
+.avatarContainer {
   position: relative;
-  margin-bottom: 8px;
+  z-index: 2;
 }
 
-.avatar {
+.avatarGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f183ff 0%, #ec6aff 100%);
+  filter: blur(4px);
+  opacity: 0.25;
+}
+
+.avatarBorder {
   width: 112px;
   height: 112px;
-  border-radius: 50%;
-  background: var(--accent-gradient);
-  padding: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 9999px;
+  border: 2px solid #f183ff;
+  padding: 2px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 
-.avatarText {
+.avatarInner {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  background: var(--bg-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: 700;
-}
-
-.premium {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 2px 12px;
-  border-radius: var(--radius-full);
-  background: var(--accent-gradient);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-
-.name {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-
-.userId {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.card {
-  margin: 0 16px 12px;
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
+  border-radius: 9999px;
   overflow: hidden;
 }
 
-.cardRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.cardTitle {
-  padding: 16px 16px 8px;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.favorites {
-  padding: 0 16px 16px;
-  overflow-x: auto;
-}
-
-.favoriteEmpty {
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2a1a3a 0%, #1a0a2a 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
 }
 
-.favoriteHint {
-  font-size: 13px;
-  color: var(--text-muted);
+.avatarInitial {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+.premiumBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(135deg, #f183ff 0%, #ec6aff 100%);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.premiumText {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: #41004c;
+  line-height: 15px;
+}
+
+.nameMargin {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+}
+
+.userName {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.75px;
+  line-height: 36px;
+  text-align: center;
+  margin: 0;
+}
+
+/* ===== Bento Grid ===== */
+.bentoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ===== Shared Card ===== */
+.card {
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.cardIcon {
+  width: 27.5px;
+  height: 27.5px;
+}
+
+.lockIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.chevronIcon {
+  width: 7.4px;
+  height: 12px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 22.5px;
+  margin: 0;
+}
+
+.cardSubtitle {
+  font-family: 'Inter', var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: #adaaaa;
+  line-height: 16px;
+  margin: 0;
+}
+
+/* ===== Active Badge ===== */
+.badgeRow {
+  padding-top: 8px;
+}
+
+.activeBadge {
+  display: inline-block;
+  background: rgba(241, 131, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ec6aff;
+  line-height: 15px;
+}
+
+/* ===== Toggle Switch ===== */
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggleTrack {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: #262626;
+  transition: background 0.2s;
+}
+
+.toggleOn .toggleTrack {
+  background: #f183ff;
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: #fff;
+  transition: left 0.2s;
+}
+
+.toggleOn .toggleKnob {
+  left: 24px;
+}
+
+/* ===== Favorites ===== */
+.favoritesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.favoritesTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heartIcon {
+  width: 20px;
+  height: 18.35px;
+}
+
+.viewAll {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fd6c9c;
+  line-height: 15px;
+  cursor: pointer;
+}
+
+.favoritesScroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0;
+}
+
+.favoritesScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.favoriteItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 96px;
+}
+
+.favoriteImgBorder {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.favoriteImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+.favoriteAdd {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #262626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plusIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.favoriteName {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.25px;
+  color: #fff;
+  text-align: center;
+  line-height: 15px;
+}
+
+.favoriteNameMuted {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.25px;
+  color: #adaaaa;
+  text-align: center;
+  line-height: 15px;
+}
+
+/* ===== App Settings ===== */
+.settingsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settingsLabel {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #adaaaa;
+  line-height: 15px;
+  margin: 0;
+  padding: 0 8px;
+}
+
+.settingsCard {
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .settingRow {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  min-height: 48px;
+  justify-content: space-between;
+  padding: 16px;
 }
 
-.settingRow:last-child {
-  border-bottom: none;
+.settingLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .settingIcon {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
+  width: 16px;
+  height: 20px;
+}
+
+.settingIconSupport {
+  width: 18px;
+  height: 18px;
 }
 
 .settingLabel {
-  flex: 1;
-  font-size: 15px;
+  font-family: 'Inter', var(--font-body);
+  font-size: 16px;
   font-weight: 500;
+  color: #fff;
+  line-height: 24px;
 }
 
-.chevron {
-  font-size: 20px;
-  color: var(--text-muted);
-  font-weight: 300;
+.settingValue {
+  font-family: 'Inter', var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: #adaaaa;
+  line-height: 16px;
 }
 
-.signOut {
-  display: block;
-  width: calc(100% - 32px);
-  margin: 16px auto 12px;
-  padding: 14px;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  font-weight: 700;
-  color: #ff4d6a;
-  border: 1px solid rgba(255, 77, 106, 0.3);
+.settingDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 16px;
+}
+
+/* ===== Sign Out & Version ===== */
+.logoutSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 24px;
+}
+
+.signOutBtn {
+  width: 100%;
+  padding: 17px 1px;
+  border-radius: 12px;
+  border: 1px solid rgba(215, 51, 87, 0.2);
   background: transparent;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #ff6e84;
+  cursor: pointer;
   min-height: 48px;
-  transition: all 0.15s;
+  transition: background 0.15s;
 }
 
-.signOut:active {
-  background: rgba(255, 77, 106, 0.1);
+.signOutBtn:active {
+  background: rgba(215, 51, 87, 0.1);
 }
 
 .version {
+  font-family: 'Inter', var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #adaaaa;
   text-align: center;
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 8px 0 24px;
+  line-height: 15px;
+  margin: 0;
 }
