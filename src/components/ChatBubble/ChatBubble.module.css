@@ -1,30 +1,75 @@
-.bubble {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: var(--radius-lg);
+/* Row wrapper */
+.row {
+  display: flex;
   animation: fadeIn 0.2s ease both;
+}
+
+.rowAssistant {
+  justify-content: flex-start;
+}
+
+.rowUser {
+  justify-content: flex-end;
+}
+
+.gap {
+  margin-top: 32px;
+}
+
+/* Bubble base */
+.bubble {
+  max-width: 304px;
   word-break: break-word;
 }
 
+/* Text */
 .text {
-  font-size: 15px;
-  line-height: 1.5;
+  font-family: 'WenQuanYi Zen Hei', var(--font-body);
+  font-weight: 500;
   white-space: pre-wrap;
+  margin: 0;
 }
 
+/* Assistant — Figma 303:62 */
 .assistant {
-  align-self: flex-start;
-  background: rgba(192, 132, 252, 0.12);
-  border: 1px solid rgba(192, 132, 252, 0.15);
-  border-bottom-left-radius: 4px;
+  background: rgba(156, 39, 176, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(241, 131, 255, 0.3);
+  border-radius: 16px;
+  border-bottom-left-radius: 0;
+  box-shadow: 0 0 20px rgba(241, 131, 255, 0.1);
+  padding: 21px 39.3px 21px 25px;
 }
 
+.assistant .text {
+  font-size: 16px;
+  color: #fff;
+  line-height: 26px;
+}
+
+/* User — Figma 303:69 */
 .user {
-  align-self: flex-end;
-  background: #2c2c2e;
-  border-bottom-right-radius: 4px;
+  max-width: 286px;
+  background: rgba(42, 42, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  border-bottom-right-radius: 0;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  padding: 13px 27.39px 13px 21px;
 }
 
+.user .text {
+  font-size: 14px;
+  color: #fcfcfc;
+  line-height: 22.75px;
+}
+
+/* Image message */
 .imageMessage {
   align-self: flex-start;
   max-width: 65%;
@@ -33,6 +78,11 @@
 
 .image {
   width: 100%;
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }

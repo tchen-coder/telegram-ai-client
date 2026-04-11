@@ -1,0 +1,148 @@
+/* ===== Error State — Figma 237:293 ===== */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 32px;
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(26, 26, 26, 1) 0%, rgba(14, 14, 14, 1) 100%);
+}
+
+/* Background glow */
+.bgGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 9999px;
+  background: rgba(241, 131, 255, 0.1);
+  filter: blur(60px);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Bottom gradient fade */
+.bottomGradient {
+  position: absolute;
+  bottom: 96px;
+  left: 0;
+  right: 0;
+  height: 128px;
+  background: linear-gradient(to top, #0e0e0e, rgba(14, 14, 14, 0));
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Content layout */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 448px;
+  width: 100%;
+}
+
+/* Icon — Figma 237:305 */
+.iconArea {
+  width: 128px;
+  height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.iconImg {
+  width: 80px;
+  height: 71px;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+/* Glitch line 1 — pink, rotated -15deg, centered */
+.glitchLine1 {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 124px;
+  height: 1px;
+  background: #f183ff;
+  opacity: 0.8;
+  box-shadow: 0 0 15px #f183ff;
+  transform: translateY(-50%) rotate(-15deg);
+  z-index: 2;
+}
+
+/* Glitch line 2 — red/coral, rotated -15deg, lower */
+.glitchLine2 {
+  position: absolute;
+  top: 54px;
+  left: 10px;
+  width: 124px;
+  height: 1px;
+  background: #fd6c9c;
+  opacity: 0.4;
+  box-shadow: 0 0 10px #fd6c9c;
+  transform: rotate(-15deg);
+  z-index: 2;
+}
+
+/* Title with text-shadow glitch effect */
+.title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  margin: 0;
+  text-shadow:
+    -2px 0 #a68cff,
+    2px 0 #fd6c9c;
+}
+
+/* Description */
+.description {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 300;
+  color: #adaaaa;
+  text-align: center;
+  line-height: 29.25px;
+  margin: 0;
+}
+
+/* Retry button — gradient pill */
+.retryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  border-radius: 9999px;
+  background: linear-gradient(158deg, #f183ff 0%, #ec6aff 100%);
+  box-shadow: 0 0 30px rgba(241, 131, 255, 0.3);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+  min-height: 48px;
+  margin-top: 8px;
+}
+
+.retryBtn:active {
+  transform: scale(0.96);
+}

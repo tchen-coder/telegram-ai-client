@@ -105,8 +105,8 @@ export default function CharacterDetailPage() {
       {/* Fixed header bar */}
       <header className={styles.header}>
         <button className={styles.backBtn} onClick={handleBack} aria-label="Go back">
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-            <path d="M9 1L1 9L9 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3.825 9L9.425 14.6L8 16L0 8L8 0L9.425 1.4L3.825 7H16V9H3.825V9" fill="#C084FC"/>
           </svg>
         </button>
         <span className={styles.headerTitle}>{role.name}</span>
@@ -123,7 +123,7 @@ export default function CharacterDetailPage() {
           </div>
         )}
         <button className={styles.viewProfileBtn} onClick={() => setExpanded(true)}>
-          <span>VIEW PROFILE</span>
+          <span>更多档案</span>
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
             <path d="M1 6.5L6 1.5L11 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -201,7 +201,7 @@ export default function CharacterDetailPage() {
           onClick={handleStartChat}
           disabled={selecting}
         >
-          {selecting ? 'Starting...' : 'Start Chatting'}
+          {selecting ? 'Starting...' : '开始聊天'}
         </button>
       </div>
     </div>

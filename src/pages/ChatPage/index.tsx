@@ -55,7 +55,6 @@ export default function ChatPage() {
   }, [user, roleIdNum, setCurrentRoleId, scrollToBottom]);
 
   useEffect(() => {
-    // Ensure role is selected on backend
     if (user && roleIdNum && !isNaN(roleIdNum) && currentRoleId !== roleIdNum) {
       selectRole({ user_id: user.userId, role_id: roleIdNum, push_to_telegram: false })
         .then((data) => {
@@ -71,7 +70,6 @@ export default function ChatPage() {
     if (!user || sending) return;
     setSending(true);
 
-    // Optimistically add user message
     const tempUserMsg: ChatMessage = {
       id: Date.now(),
       role_id: roleIdNum,
@@ -93,7 +91,6 @@ export default function ChatPage() {
         content: text,
         user_name: user.userName,
       });
-      // Replace temp message with real messages
       setMessages((prev) => {
         const filtered = prev.filter((m) => m.id !== tempUserMsg.id);
         return [...filtered, data.user_message, ...data.assistant_messages];
@@ -101,7 +98,6 @@ export default function ChatPage() {
       if (data.role) setRole(data.role);
     } catch (err) {
       console.error('Failed to send message:', err);
-      // Remove temp message on error
       setMessages((prev) => prev.filter((m) => m.id !== tempUserMsg.id));
     } finally {
       setSending(false);
@@ -109,46 +105,42 @@ export default function ChatPage() {
     }
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const backgroundStyle: React.CSSProperties = role?.chat_background_image_url
-    ? {
-        backgroundImage: `url(${role.chat_background_image_url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }
-    : {};
+  const handleBack = () => navigate(-1);
 
   return (
-    <div className={styles.container} style={backgroundStyle}>
+    <div className={styles.container}>
+      {/* Background image — Figma 303:58 */}
+      {role?.chat_background_image_url && (
+        <div className={styles.bgImage}>
+          <img src={role.chat_background_image_url} alt="" />
+        </div>
+      )}
+
+      {/* Header — Figma 303:135 */}
       <header className={styles.header}>
         <button className={styles.backBtn} onClick={handleBack}>
-          ‹
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3.825 9L9.425 14.6L8 16L0 8L8 0L9.425 1.4L3.825 7H16V9H3.825V9" fill="#C084FC"/>
+          </svg>
         </button>
-        <div className={styles.headerInfo}>
-          <h1 className={styles.headerTitle}>{role?.name || 'Chat'}</h1>
-          {role && (
-            <span className={styles.headerSub}>{role.relationship_label}</span>
-          )}
-        </div>
-        <div className={styles.headerRight} />
+        <h1 className={styles.headerTitle}>{role?.name || ''}</h1>
       </header>
 
+      {/* Messages — Figma 303:59 */}
       <div ref={scrollRef} className={styles.messages}>
         {loading ? (
           <div className={styles.loading}>Loading...</div>
         ) : (
           <>
-            {messages.map((msg) => (
-              <ChatBubble key={msg.id} message={msg} />
+            {messages.map((msg, i) => (
+              <ChatBubble key={msg.id} message={msg} isFirst={i === 0} />
             ))}
             {sending && <TypingIndicator />}
           </>
         )}
       </div>
 
+      {/* Immersive Input Area — Figma 303:91 */}
       <ChatInput onSend={handleSend} disabled={sending || loading} />
     </div>
   );

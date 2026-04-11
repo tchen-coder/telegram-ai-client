@@ -1,33 +1,49 @@
+/* Container — Figma 303:57 */
 .container {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  background: var(--bg-primary);
+  background: #0e0e0e;
   position: relative;
+  overflow: hidden;
 }
 
-.container::before {
-  content: '';
+/* Character background — Figma 303:58 */
+.bgImage {
   position: absolute;
   inset: 0;
-  background: rgba(14, 14, 14, 0.75);
+  overflow: hidden;
+  pointer-events: none;
   z-index: 0;
 }
 
+.bgImage img {
+  position: absolute;
+  top: 0;
+  left: -63.33%;
+  width: 226.67%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+/* Header — Figma 303:135 */
 .header {
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: var(--header-height);
-  padding: 0 8px;
+  height: 64px;
+  padding: 0 16px;
   padding-top: var(--safe-top);
-  background: rgba(14, 14, 14, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(14, 14, 14, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .backBtn {
@@ -36,39 +52,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  font-weight: 300;
-  border-radius: var(--radius-full);
+  border-radius: 50%;
   transition: background 0.15s;
+  flex-shrink: 0;
+  margin-left: -3px;
 }
 
 .backBtn:active {
-  background: var(--bg-elevated);
-}
-
-.headerInfo {
-  flex: 1;
-  text-align: center;
-  min-width: 0;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .headerTitle {
-  font-size: 17px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Manrope', var(--font-display);
+  font-size: 20px;
   font-weight: 700;
+  color: #c084fc;
+  letter-spacing: -0.5px;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 50%;
 }
 
-.headerSub {
-  font-size: 12px;
-  color: var(--accent-pink);
-}
-
-.headerRight {
-  width: 40px;
-}
-
+/* Messages area — Figma 303:59 */
 .messages {
   position: relative;
   z-index: 1;
@@ -77,9 +87,10 @@
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  padding-bottom: 8px;
+  padding: 96px 16px 216px;
+  max-width: 672px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .loading {
@@ -87,6 +98,6 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: var(--text-muted);
+  color: #adaaaa;
   font-size: 14px;
 }

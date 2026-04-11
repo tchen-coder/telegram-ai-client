@@ -66,11 +66,11 @@
 
 .tagSolid {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: var(--radius-full);
   background: var(--bg-tag-solid);
   color: var(--text-accent);
@@ -78,16 +78,14 @@
 
 .tagGlass {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: -0.05em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  padding: 4px 12px;
+  padding: 8px 18px;
   border-radius: var(--radius-full);
-  background: var(--bg-tag-glass);
-  color: var(--text-figma-secondary);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: var(--bg-tag-solid);
+  color: var(--text-accent);
 }
 
 /* Info Area */

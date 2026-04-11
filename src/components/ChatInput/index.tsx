@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './ChatInput.module.css';
 
 interface ChatInputProps {
@@ -8,9 +8,10 @@ interface ChatInputProps {
 
 export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [text, setText] = useState('');
+  const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const trimmed = text.trim();
     if (!trimmed || disabled) return;
     onSend(trimmed);
@@ -18,14 +19,17 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
     if (inputRef.current) {
       inputRef.current.style.height = 'auto';
     }
+  }, [text, disabled, onSend]);
+
+  const handleActivate = () => {
+    setFocused(true);
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
+  const handleFocus = () => setFocused(true);
+  const handleBlur = () => setFocused(false);
 
   useEffect(() => {
     const el = inputRef.current;
@@ -37,31 +41,34 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div className={styles.container}>
-      <textarea
-        ref={inputRef}
-        className={styles.input}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="输入消息..."
-        rows={1}
-        disabled={disabled}
-      />
-      <button
-        className={`${styles.sendBtn} ${text.trim() ? styles.active : ''}`}
-        onClick={handleSubmit}
-        disabled={!text.trim() || disabled}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div className={styles.bar}>
+        <div className={styles.inputWrapper}>
+          <div
+            className={`${styles.overlay} ${focused ? styles.overlayHidden : ''}`}
+            onClick={handleActivate}
           />
-        </svg>
-      </button>
+          <textarea
+            ref={inputRef}
+            className={styles.input}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder="轻声诉说你的想法..."
+            rows={1}
+            disabled={disabled}
+          />
+        </div>
+        <button
+          className={styles.sendBtn}
+          onClick={(e) => { e.stopPropagation(); handleSubmit(); }}
+          disabled={disabled}
+        >
+          <svg className={styles.sendIcon} viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 16V10L8 8L0 6V0L19 8L0 16Z" fill="#41004C"/>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

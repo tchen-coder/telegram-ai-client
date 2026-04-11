@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../store/appStore';
 import { getRoles } from '../../api/client';
@@ -7,26 +7,28 @@ import CharacterCard from '../../components/CharacterCard';
 import ExploreHeader from '../../components/TopAppBar';
 import styles from './ExplorePage.module.css';
 
-const FILTER_TAGS = ['All Stories', 'Trending', 'Sweet', 'Flirty', 'Introvert', 'Tsundere'];
+const FILTER_TAGS = ['全部', '热门', '甜蜜', '撩人', '内敛', '傲娇'];
 
 export default function ExplorePage() {
   const { user } = useApp();
   const navigate = useNavigate();
   const [roles, setRoles] = useState<Role[]>([]);
-  const [activeTag, setActiveTag] = useState('All Stories');
+  const [activeTag, setActiveTag] = useState('全部');
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const fetchRoles = useCallback(async (tag: string, p: number) => {
-    setLoading(true);
+    if (p === 1) setLoading(true); else setLoadingMore(true);
     try {
       const data = await getRoles({
         user_id: user?.userId,
         page: p,
         page_size: 20,
-        tag: tag === 'All Stories' ? undefined : tag,
-        sort: tag === 'Trending' ? 'latest' : undefined,
+        tag: tag === '全部' ? undefined : tag,
+        sort: tag === '热门' ? 'latest' : undefined,
       });
       if (p === 1) {
         setRoles(data.roles);
@@ -38,6 +40,7 @@ export default function ExplorePage() {
       console.error('Failed to fetch roles:', err);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   }, [user?.userId]);
 
@@ -46,27 +49,40 @@ export default function ExplorePage() {
     setPage(1);
   }, [activeTag, fetchRoles]);
 
-  const handleCardClick = (role: Role) => {
-    navigate(`/role/${role.id}`, { state: { role } });
-  };
-
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
+    if (loadingMore || !hasMore) return;
     const next = page + 1;
     setPage(next);
     fetchRoles(activeTag, next);
+  }, [loadingMore, hasMore, page, activeTag, fetchRoles]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) handleLoadMore();
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [handleLoadMore]);
+
+  const handleCardClick = (role: Role) => {
+    navigate(`/role/${role.id}`, { state: { role } });
   };
 
   return (
     <div className="page-container">
       {/* Sticky Header */}
-      <ExploreHeader title="Explore" />
+      <ExploreHeader title="秘语" />
 
       {/* Hero Section */}
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>Discovery</h1>
+        <h1 className={styles.heroTitle}>探索</h1>
         <p className={styles.heroSubtitle}>
-          Find your midnight companion<br />
-          in the velvet shadows.
+          深夜不孤单，总有人陪你
         </p>
       </section>
 
@@ -99,7 +115,23 @@ export default function ExplorePage() {
           </div>
         ) : roles.length === 0 ? (
           <div className={styles.empty}>
-            <p>No characters found</p>
+            <div className={styles.emptyGlow} />
+            <div className={styles.emptyVisual}>
+              <div className={styles.emptyCircle}>
+                <div className={styles.emptyCircleInner}>
+                  <img className={styles.emptyCircleImg} src={new URL('../../assets/explore-empty-avatar.webp', import.meta.url).href} alt="" />
+                  <div className={styles.emptyCircleSaturation} />
+                  <div className={styles.emptyCircleOverlay} />
+                  <div className={styles.emptyGlitchLine} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.emptyTextBlock}>
+              <h2 className={styles.emptyHeading}>还没人出现</h2>
+              <p className={styles.emptySubtext}>
+                还没有陪伴上线，请稍等片刻。
+              </p>
+            </div>
           </div>
         ) : (
           <>
@@ -113,9 +145,11 @@ export default function ExplorePage() {
               ))}
             </div>
             {hasMore && (
-              <button className={styles.loadMore} onClick={handleLoadMore}>
-                Load more
-              </button>
+              <div ref={sentinelRef} className={styles.loadMoreArea}>
+                {loadingMore && (
+                  <div className={styles.spinner} />
+                )}
+              </div>
             )}
           </>
         )}

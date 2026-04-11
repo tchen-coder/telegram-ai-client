@@ -4,6 +4,7 @@ import { useApp } from '../../store/appStore';
 import { getMyRoles, deleteMyRole } from '../../api/client';
 import type { Role } from '../../types/api';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import TopAppBar from '../../components/TopAppBar';
 import styles from './MessagesPage.module.css';
 
 export default function MessagesPage() {
@@ -56,12 +57,9 @@ export default function MessagesPage() {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container" onClick={() => { if (swipedId !== null) setSwipedId(null); }}>
       {/* Header */}
-      <header className={styles.header}>
-        <h1 className={styles.title}>Messages</h1>
-        <div className={styles.headerDivider} />
-      </header>
+      <TopAppBar title="秘语" />
 
       <div className={styles.main}>
         {loading ? (
@@ -77,7 +75,13 @@ export default function MessagesPage() {
                 isActive={index === 0}
                 isSwiped={swipedId === role.id}
                 onSwipe={() => setSwipedId(swipedId === role.id ? null : role.id)}
-                onChat={() => handleChat(role)}
+                onChat={() => {
+                  if (swipedId !== null && swipedId !== role.id) {
+                    setSwipedId(null);
+                    return;
+                  }
+                  handleChat(role);
+                }}
                 onDelete={() => setDeleteTarget(role)}
               />
             ))}
@@ -87,9 +91,10 @@ export default function MessagesPage() {
 
       <ConfirmDialog
         open={!!deleteTarget}
-        title="Delete Chat?"
-        message={`Are you sure you want to delete your conversation with ${deleteTarget?.name}?`}
-        confirmText={deleting ? 'Deleting...' : 'Delete'}
+        title="删除对话？"
+        message={`确定要删除与 ${deleteTarget?.name} 的对话吗？此操作无法撤销。`}
+        confirmText={deleting ? '删除中...' : '删除'}
+        cancelText="取消"
         danger
         onConfirm={handleDelete}
         onCancel={() => { setDeleteTarget(null); setSwipedId(null); }}
@@ -98,16 +103,25 @@ export default function MessagesPage() {
   );
 }
 
-/* Empty state */
+/* Empty state — Figma 248:509 */
+const emptyAvatar = new URL('../../assets/empty-avatar.webp', import.meta.url).href;
+const ctaArrow = new URL('../../assets/cta-arrow.svg', import.meta.url).href;
+
 function EmptyState({ onExplore }: { onExplore: () => void }) {
   return (
     <div className={styles.emptyContainer}>
       <div className={styles.emptyVisual}>
         <div className={styles.emptyGlow} />
         <div className={styles.emptyCircle}>
-          <div className={styles.emptyCircleImg} />
-          <div className={styles.emptyCircleOverlay} />
+          <div className={styles.emptyCircleBorder}>
+            <img className={styles.emptyCircleImg} src={emptyAvatar} alt="" />
+            <div className={styles.emptyCircleSaturation} />
+            <div className={styles.emptyCircleOverlay} />
+            <div className={styles.emptyCircleNeon} />
+          </div>
         </div>
+        <div className={styles.emptyAccentCircle} />
+        <div className={styles.emptyAccentGlow} />
       </div>
       <div className={styles.emptyTextBlock}>
         <h2 className={styles.emptyHeading}>静谧的午夜...</h2>
@@ -117,9 +131,7 @@ function EmptyState({ onExplore }: { onExplore: () => void }) {
       </div>
       <button className={styles.emptyCta} onClick={onExplore}>
         <span>去探索角色</span>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M3.75 9H14.25M14.25 9L9.75 4.5M14.25 9L9.75 13.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <img src={ctaArrow} alt="" className={styles.emptyCtaArrow} />
       </button>
     </div>
   );
@@ -141,11 +153,16 @@ function ChatItem({ role, isActive, isSwiped, onSwipe, onChat, onDelete }: ChatI
   const isDragging = useRef(false);
   const SWIPE_OFFSET = 80;
 
+  const setBackground = (bg: string) => {
+    if (contentRef.current) contentRef.current.style.background = bg;
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
     isDragging.current = true;
     if (contentRef.current) {
       contentRef.current.style.transition = 'none';
+      contentRef.current.style.background = '#20201f';
     }
   };
 
@@ -154,12 +171,14 @@ function ChatItem({ role, isActive, isSwiped, onSwipe, onChat, onDelete }: ChatI
     const diff = startX.current - e.touches[0].clientX;
     const offset = Math.max(0, Math.min(diff, SWIPE_OFFSET));
     contentRef.current.style.transform = `translateX(-${offset}px)`;
+    // Keep #20201f while swiping
+    contentRef.current.style.background = '#20201f';
   };
 
   const handleTouchEnd = () => {
     if (!isDragging.current || !contentRef.current) return;
     isDragging.current = false;
-    contentRef.current.style.transition = 'transform 0.25s cubic-bezier(0.32, 0.72, 0, 1)';
+    contentRef.current.style.transition = 'transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), background 0.2s';
 
     const currentTransform = contentRef.current.style.transform;
     const match = currentTransform.match(/translateX\(-([\d.]+)px\)/);
@@ -167,17 +186,21 @@ function ChatItem({ role, isActive, isSwiped, onSwipe, onChat, onDelete }: ChatI
 
     if (currentOffset > SWIPE_OFFSET / 2) {
       contentRef.current.style.transform = `translateX(-${SWIPE_OFFSET}px)`;
+      contentRef.current.style.background = '#20201f';
       onSwipe();
     } else {
       contentRef.current.style.transform = 'translateX(0)';
+      contentRef.current.style.background = '#101010';
       if (isSwiped) onSwipe();
     }
   };
 
+  // Sync transform & background from parent isSwiped prop
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.style.transition = 'transform 0.25s cubic-bezier(0.32, 0.72, 0, 1)';
+      contentRef.current.style.transition = 'transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), background 0.2s';
       contentRef.current.style.transform = isSwiped ? `translateX(-${SWIPE_OFFSET}px)` : 'translateX(0)';
+      contentRef.current.style.background = isSwiped ? '#20201f' : '#101010';
     }
   }, [isSwiped]);
 

@@ -43,7 +43,7 @@ export default function ProfilePage() {
               </div>
               {/* Premium badge */}
               <div className={styles.premiumBadge}>
-                <span className={styles.premiumText}>Premium</span>
+                <span className={styles.premiumText}>高级</span>
               </div>
             </div>
             {/* Username */}
@@ -61,11 +61,11 @@ export default function ProfilePage() {
                 <img alt="" className={styles.chevronIcon} src={iconChevron} />
               </div>
               <div className={styles.cardBody}>
-                <h3 className={styles.cardTitle}>My Subscriptions</h3>
-                <p className={styles.cardSubtitle}>Manage Noir Elite & Pro access</p>
+                <h3 className={styles.cardTitle}>我的订阅</h3>
+                <p className={styles.cardSubtitle}>管理高级会员与专业版权限</p>
               </div>
               <div className={styles.badgeRow}>
-                <span className={styles.activeBadge}>Active: Elite</span>
+                <span className={styles.activeBadge}>已激活：精英版</span>
               </div>
             </div>
 
@@ -82,8 +82,8 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className={styles.cardBody}>
-                <h3 className={styles.cardTitle}>Privacy Lock</h3>
-                <p className={styles.cardSubtitle}>Biometric security enabled</p>
+                <h3 className={styles.cardTitle}>隐私锁</h3>
+                <p className={styles.cardSubtitle}>生物识别安全已启用</p>
               </div>
             </div>
 
@@ -92,9 +92,9 @@ export default function ProfilePage() {
               <div className={styles.favoritesHeader}>
                 <div className={styles.favoritesTitleRow}>
                   <img alt="" className={styles.heartIcon} src={iconHeart} />
-                  <h3 className={styles.cardTitle}>My Favorites</h3>
+                  <h3 className={styles.cardTitle}>我的收藏</h3>
                 </div>
-                <span className={styles.viewAll}>View All</span>
+                <span className={styles.viewAll}>查看全部</span>
               </div>
               <div className={styles.favoritesScroll}>
                 <div className={styles.favoriteItem}>
@@ -113,19 +113,19 @@ export default function ProfilePage() {
                   <div className={styles.favoriteAdd}>
                     <img alt="" className={styles.plusIcon} src={iconPlus} />
                   </div>
-                  <span className={styles.favoriteNameMuted}>NEW</span>
+                  <span className={styles.favoriteNameMuted}>新增</span>
                 </div>
               </div>
             </div>
 
             {/* --- App Settings --- */}
             <div className={styles.settingsSection}>
-              <h4 className={styles.settingsLabel}>App Settings</h4>
+              <h4 className={styles.settingsLabel}>应用设置</h4>
               <div className={styles.settingsCard}>
                 <div className={styles.settingRow}>
                   <div className={styles.settingLeft}>
                     <img alt="" className={styles.settingIcon} src={iconNotifications} />
-                    <span className={styles.settingLabel}>Notifications</span>
+                    <span className={styles.settingLabel}>通知</span>
                   </div>
                   <img alt="" className={styles.chevronIcon} src={iconChevronSm} />
                 </div>
@@ -133,23 +133,23 @@ export default function ProfilePage() {
                 <div className={styles.settingRow}>
                   <div className={styles.settingLeft}>
                     <img alt="" className={styles.settingIcon} src={iconAppearance} />
-                    <span className={styles.settingLabel}>Appearance</span>
+                    <span className={styles.settingLabel}>外观</span>
                   </div>
-                  <span className={styles.settingValue}>Dark Noir</span>
+                  <span className={styles.settingValue}>暗夜黑</span>
                 </div>
                 <div className={styles.settingDivider} />
                 <div className={styles.settingRow}>
                   <div className={styles.settingLeft}>
                     <img alt="" className={styles.settingIcon} src={iconLanguage} />
-                    <span className={styles.settingLabel}>Language</span>
+                    <span className={styles.settingLabel}>语言</span>
                   </div>
-                  <span className={styles.settingValue}>English (US)</span>
+                  <span className={styles.settingValue}>简体中文</span>
                 </div>
                 <div className={styles.settingDivider} />
                 <div className={styles.settingRow}>
                   <div className={styles.settingLeft}>
                     <img alt="" className={styles.settingIconSupport} src={iconSupport} />
-                    <span className={styles.settingLabel}>Support & FAQ</span>
+                    <span className={styles.settingLabel}>帮助与反馈</span>
                   </div>
                   <img alt="" className={styles.chevronIcon} src={iconChevronSm} />
                 </div>
@@ -158,8 +158,8 @@ export default function ProfilePage() {
 
             {/* --- Sign Out --- */}
             <div className={styles.logoutSection}>
-              <button className={styles.signOutBtn}>Sign Out of Noir</button>
-              <p className={styles.version}>App Version 2.4.0 (Build 892)</p>
+              <button className={styles.signOutBtn}>退出登录</button>
+              <p className={styles.version}>版本 2.4.0 (Build 892)</p>
             </div>
           </div>
         </div>

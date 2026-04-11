@@ -1,3 +1,4 @@
+/* ===== Overlay — Figma 233:53 ===== */
 .overlay {
   position: fixed;
   inset: 0;
@@ -7,69 +8,139 @@
   justify-content: center;
   padding: 24px;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
   animation: fadeIn 0.2s ease;
 }
 
+/* ===== Dialog — Figma 233:55 ===== */
 .dialog {
+  position: relative;
   width: 100%;
-  max-width: 320px;
-  background: rgba(42, 42, 42, 0.95);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  padding: 24px;
+  max-width: 384px;
+  background: rgba(38, 38, 38, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 40px;
+  padding: 33px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  backdrop-filter: blur(20px);
-  animation: fadeIn 0.25s ease;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  animation: dialogIn 0.25s ease;
 }
 
+/* Glow accent — top right */
+.dialog::before {
+  content: '';
+  position: absolute;
+  top: -48px;
+  right: -48px;
+  width: 128px;
+  height: 128px;
+  border-radius: 9999px;
+  background: rgba(255, 110, 132, 0.1);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* ===== Icon — Figma 233:58 ===== */
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  background: rgba(255, 110, 132, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+/* ===== Title — Figma 233:62 ===== */
 .title {
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: #fff;
   text-align: center;
+  margin: 0 0 10px;
 }
 
+/* ===== Message — Figma 233:64 ===== */
 .message {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-family: 'Inter', var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: #adaaaa;
   text-align: center;
-  line-height: 1.5;
+  line-height: 24.38px;
+  max-width: 256px;
+  margin: 0 0 40px;
 }
 
-/* Vertical: cancel on top, confirm on bottom */
+/* ===== Actions — Figma 233:65 ===== */
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 12px;
   width: 100%;
 }
 
-.cancelBtn,
+/* ===== Delete Button — Figma 233:66 ===== */
 .confirmBtn {
   width: 100%;
-  height: 48px;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.15s;
-  min-height: 44px;
+  padding: 16px;
+  border-radius: 9999px;
+  background: linear-gradient(169deg, #ff6e84 0%, #d73357 100%);
+  box-shadow: 0 0 25px rgba(255, 110, 132, 0.3);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #490013;
+  border: none;
+  cursor: pointer;
+  min-height: 48px;
+  transition: transform 0.15s;
 }
 
+.confirmBtn:active {
+  transform: scale(0.97);
+}
+
+/* ===== Cancel Button — Figma 233:68 ===== */
 .cancelBtn {
-  border: 1px solid var(--border-subtle);
+  width: 100%;
+  padding: 17px 1px;
+  border-radius: 9999px;
+  border: 1px solid rgba(72, 72, 71, 0.2);
   background: transparent;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #adaaaa;
+  cursor: pointer;
+  min-height: 48px;
+  transition: background 0.15s;
 }
 
-.confirmBtn {
-  background: var(--accent-gradient);
-  color: #fff;
+.cancelBtn:active {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.danger {
-  background: linear-gradient(135deg, #ff4d6a, #ff1744);
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }

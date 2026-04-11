@@ -34,7 +34,7 @@
 
 /* ===== Main content area — Figma 239:405 ===== */
 .main {
-  padding: 96px 16px 128px;
+  padding: 16px 16px 128px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -106,7 +106,7 @@
   gap: 16px;
   align-items: center;
   padding: 16px;
-  background: rgba(19, 19, 19, 0.95);
+  background: #101010;
   border-radius: 24px;
   cursor: pointer;
   position: relative;
@@ -114,11 +114,17 @@
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y;
+  transition: background 0.15s;
 }
 
-.chatContent:active {
-  background: rgba(19, 19, 19, 0.6);
+.chatContent.pressing {
+  background: #20201f;
 }
+
+.chatContent.released {
+  background: #20201f;
+}
+
 
 /* Swiped state — Figma 239:431 */
 .chatContent.swiped {
@@ -212,93 +218,168 @@
   text-align: left;
 }
 
-/* ===== Empty State ===== */
+/* ===== Empty State — Figma 248:509 ===== */
 .emptyContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 32px;
-  gap: 32px;
+  min-height: calc(100vh - 200px);
+  padding: 40px 32px;
+  position: relative;
 }
 
+/* Glow behind avatar */
 .emptyVisual {
   position: relative;
-  width: 160px;
-  height: 160px;
+  width: 256px;
+  height: 256px;
+  margin-bottom: 32px;
 }
 
 .emptyGlow {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(241, 131, 255, 0.2) 0%, transparent 70%);
-  filter: blur(20px);
+  display: none;
 }
 
+/* Circular frame with neon gradient border */
 .emptyCircle {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
+  position: relative;
+  width: 256px;
+  height: 256px;
+  border-radius: 9999px;
+  padding: 6px;
+  background: linear-gradient(45deg, #f183ff 0%, #a68cff 100%);
+}
+
+/* Inner border */
+.emptyCircleBorder {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 4px solid #0e0e0e;
+  padding: 4px;
   overflow: hidden;
-  border: 2px solid rgba(241, 131, 255, 0.3);
+  position: relative;
 }
 
+/* Avatar image */
 .emptyCircleImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Saturation blend overlay — mutes vivid reds */
+.emptyCircleSaturation {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #2a1a3a 0%, #1a0a2a 100%);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.3);
+  mix-blend-mode: saturation;
+  pointer-events: none;
 }
 
+/* Atmospheric overlays */
 .emptyCircleOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 40%, rgba(241, 131, 255, 0.15) 0%, transparent 60%);
+  border-radius: 9999px;
+  background: linear-gradient(to top, rgba(14, 14, 14, 0.6) 0%, rgba(14, 14, 14, 0) 50%, rgba(14, 14, 14, 0) 100%);
+  pointer-events: none;
 }
 
+/* Neon border overlay */
+.emptyCircleNeon {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 10px solid rgba(241, 131, 255, 0.1);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Floating accent - top right */
+.emptyAccentCircle {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  border: 1px solid rgba(241, 131, 255, 0.3);
+}
+
+/* Floating accent - bottom left glow */
+.emptyAccentGlow {
+  position: absolute;
+  bottom: 40px;
+  left: -24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(253, 108, 156, 0.2);
+  filter: blur(12px);
+}
+
+/* Typography */
 .emptyTextBlock {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  width: 100%;
+  max-width: 296px;
 }
 
 .emptyHeading {
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
   text-align: center;
+  letter-spacing: -0.75px;
+  line-height: 37.5px;
   margin: 0;
 }
 
 .emptySubtext {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--text-figma-secondary);
+  font-size: 18px;
+  color: #adaaaa;
   text-align: center;
-  line-height: 1.6;
-  max-width: 280px;
+  line-height: 29.25px;
   margin: 0;
 }
 
+/* CTA Button — gradient pill */
 .emptyCta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
+  gap: 12px;
+  padding: 16px 40px;
   border-radius: 9999px;
-  background: var(--accent-gradient);
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
+  background: linear-gradient(164deg, #f183ff 0%, #ec6aff 100%);
+  box-shadow: 0 0 30px rgba(241, 131, 255, 0.4);
+  font-family: 'WenQuanYi Zen Hei', var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
   color: #000;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
   border: none;
   cursor: pointer;
   transition: transform 0.15s;
   min-height: 48px;
+  margin-top: 32px;
 }
 
 .emptyCta:active {
   transform: scale(0.96);
+}
+
+.emptyCtaArrow {
+  width: 18px;
+  height: 18px;
 }
