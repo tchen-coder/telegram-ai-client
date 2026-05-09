@@ -1,6 +1,7 @@
 /* Typing indicator — Figma 303:82 */
 .container {
   align-self: flex-start;
+  margin-top: 32px;
   animation: fadeIn 0.2s ease both;
 }
 
@@ -23,7 +24,7 @@
   height: 6px;
   border-radius: 50%;
   background: #eb65ff;
-  animation: dotPulse 1.4s ease-in-out infinite;
+  animation: dotBounce 1.4s ease-in-out infinite;
 }
 
 .dot:nth-child(2) {
@@ -32,6 +33,15 @@
 
 .dot:nth-child(3) {
   animation-delay: 0.4s;
+}
+
+@keyframes dotBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
 }
 
 @keyframes fadeIn {

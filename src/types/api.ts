@@ -24,16 +24,25 @@ export interface Role {
   role_id: number;
   name: string;
   description: string;
+  age: number;
   relationship: number;
   relationship_label: string;
+  rv: number;
   avatar_url: string;
   role_image_url: string;
   role_description_image_url: string;
   chat_background_image_url: string | null;
-  tags: string[];
-  role_images: RoleImage[];
+  tags?: string[];
+  jobs?: string[];
+  role_images?: RoleImage[];
+  greeting_message?: string;
+  is_active?: boolean;
+  language?: string;
+  typing_speed?: number;
   is_current?: boolean;
   latest_reply?: string;
+  latest_reply_time?: number; // 秒级 unix 时间戳
+  unread_count?: number;
 }
 
 /** Pagination info */
@@ -44,6 +53,25 @@ export interface Pagination {
   has_more: boolean;
 }
 
+/** Structured content types for assistant messages */
+export interface ContentPart {
+  type: 'normal' | 'action';
+  content: string;
+}
+
+export interface ContentSentence {
+  seq: number;
+  sentence_text: string;
+  sentence_type: 'normal' | 'action' | 'mixed';
+  parts: ContentPart[];
+  delay: number; // ms to wait (show typing indicator) before streaming this sentence
+}
+
+export interface AssistantContent {
+  full_text: string;
+  sentences: ContentSentence[];
+}
+
 /** Chat message */
 export interface ChatMessage {
   id: number;
@@ -52,9 +80,11 @@ export interface ChatMessage {
   group_seq: number;
   timestamp: number;
   message_type: 'user' | 'assistant' | 'assistant_image';
-  content: string;
+  content: string | AssistantContent;
   image_url: string | null;
   created_at: string;
+  cur_relationship?: number;
+  cur_relationship_label?: string;
 }
 
 /** GET /api/roles response data */
@@ -74,7 +104,9 @@ export interface MyRolesData {
 /** POST /api/roles/select response data */
 export interface SelectRoleData {
   role: Role;
-  sent_greeting: boolean;
+  relationship: number;
+  relationship_label: string;
+  rv: number;
 }
 
 /** GET /api/conversations response data */
@@ -85,7 +117,6 @@ export interface ConversationsData {
     limit: number;
     has_more: boolean;
     next_before_group_seq: number | null;
-    next_before_message_id: number | null;
   };
 }
 
@@ -101,4 +132,11 @@ export interface ChatMessageData {
 /** POST /api/myroles/delete response data */
 export interface DeleteRoleData {
   role_id: number;
+}
+
+/** POST /api/users/telegram-miniapp/upsert response data */
+export interface UpsertUserData {
+  user_id: number;
+  created: boolean;
+  language_updated: boolean;
 }

@@ -6,6 +6,7 @@ import type {
   ConversationsData,
   ChatMessageData,
   DeleteRoleData,
+  UpsertUserData,
 } from '../types/api';
 
 const BASE = '';
@@ -56,7 +57,7 @@ export function getMyRoles(params: {
 
 export function selectRole(params: {
   user_id: string;
-  role_id: number;
+  role_id: string;
   push_to_telegram?: boolean;
 }) {
   return apiPost<SelectRoleData>('/api/roles/select', params as Record<string, unknown>);
@@ -64,23 +65,39 @@ export function selectRole(params: {
 
 export function getConversations(params: {
   user_id: string;
-  role_id: number;
+  role_id: string;
   limit?: number;
   before_group_seq?: number;
-  before_message_id?: number;
 }) {
   return apiGet<ConversationsData>('/api/conversations', params as Record<string, string | number | undefined>);
 }
 
 export function sendChatMessage(params: {
   user_id: string;
-  role_id: number;
+  role_id: string;
   content: string;
   user_name?: string;
 }) {
   return apiPost<ChatMessageData>('/api/chat/messages', params as Record<string, unknown>);
 }
 
-export function deleteMyRole(params: { user_id: string; role_id: number }) {
+export function deleteMyRole(params: { user_id: string; role_id: string }) {
   return apiPost<DeleteRoleData>('/api/myroles/delete', params as Record<string, unknown>);
+}
+
+export function markMyRoleRead(params: { user_id: string; role_id: string }) {
+  return apiPost<{ ok: boolean }>('/api/myroles/read', params as Record<string, unknown>);
+}
+
+export function healthCheck() {
+  return apiGet<{ ok: boolean }>('/api/health');
+}
+
+export function upsertUser(params: {
+  platform: string;
+  platform_user_id: string;
+  platform_username?: string;
+  language_code?: string;
+}) {
+  return apiPost<UpsertUserData>('/api/users/telegram-miniapp/upsert', params as Record<string, unknown>);
 }

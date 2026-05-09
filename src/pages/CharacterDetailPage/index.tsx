@@ -1,8 +1,10 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useApp } from '../../store/appStore';
 import { useBackButton } from '../../hooks/useTelegram';
 import { selectRole } from '../../api/client';
+import { getLocale } from '../../utils/locale';
+import { trackEvent } from '../../utils/track';
 import type { Role } from '../../types/api';
 import styles from './CharacterDetailPage.module.css';
 
@@ -11,12 +13,13 @@ interface LocationState {
 }
 
 export default function CharacterDetailPage() {
+  const t = getLocale();
   const { user, setCurrentRoleId } = useApp();
   const navigate = useNavigate();
   const { roleId } = useParams<{ roleId: string }>();
   const location = useLocation();
   const state = (location.state as LocationState) || {};
-  const role = state.role;
+  const [role, setRole] = useState<Role | null>(state.role || null);
 
   const [selecting, setSelecting] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -25,23 +28,72 @@ export default function CharacterDetailPage() {
   const pullStartY = useRef(0);
   const isPulling = useRef(false);
 
+  // Fetch fresh role data to get updated rv value
+  useEffect(() => {
+    if (!user || !roleId) return;
+    selectRole({ user_id: user.userId, role_id: roleId, push_to_telegram: false })
+      .then((data) => setRole(data.role))
+      .catch(() => {});
+  }, [user?.userId, roleId]);
+
+  // 埋点：详情页曝光（一次） & 记录进入时间用于 clickBackInfoDetail dwelltime
+  const reportedShowRef = useRef(false);
+  const enterTimeRef = useRef<number>(0);
+  useEffect(() => {
+    if (!roleId || reportedShowRef.current) return;
+    trackEvent('showInfoPage', { role_id: Number(roleId) });
+    reportedShowRef.current = true;
+    enterTimeRef.current = Date.now();
+  }, [roleId]);
+
+  // clickChatInfoPage 的 waittime: CharacterDetailPage 进 ChatPage 会 unmount，
+  // 所以把点击时间存 sessionStorage，回到详情页 mount 时算差值上报。
+  useEffect(() => {
+    if (!roleId) return;
+    const key = `chat_click_ts_${roleId}`;
+    const raw = sessionStorage.getItem(key);
+    if (raw) {
+      const ts = Number(raw);
+      if (ts > 0) {
+        trackEvent('clickChatInfoPage', {
+          role_id: Number(roleId),
+          waittime: Date.now() - ts,
+        });
+      }
+      sessionStorage.removeItem(key);
+    }
+  }, [roleId]);
+
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    if (roleId) {
+      trackEvent('clickBackInfoDetail', {
+        role_id: Number(roleId),
+        dwelltime: enterTimeRef.current ? Date.now() - enterTimeRef.current : 0,
+      });
+    }
+    const idx = (window.history.state as { idx?: number } | null)?.idx;
+    if (idx === 0 || idx == null) {
+      navigate('/', { replace: true });
+    } else {
+      navigate(-1);
+    }
+  }, [navigate, roleId]);
 
   useBackButton(handleBack);
 
   const handleStartChat = async () => {
     if (!user || !role || selecting) return;
     setSelecting(true);
+    // 记录点击时间，回到详情页时上报 clickChatInfoPage 的 waittime
+    sessionStorage.setItem(`chat_click_ts_${role.role_id}`, String(Date.now()));
     try {
       await selectRole({
         user_id: user.userId,
-        role_id: role.id,
+        role_id: String(role.role_id),
         push_to_telegram: false,
       });
       setCurrentRoleId(role.id);
-      navigate(`/chat/${role.id}`, { state: { role } });
+      navigate(`/chat/${role.role_id}`, { state: { role } });
     } catch (err) {
       console.error('Failed to select role:', err);
     } finally {
@@ -61,12 +113,22 @@ export default function CharacterDetailPage() {
     }
   };
 
+  const handleExpand = () => {
+    trackEvent('clickInfoDetail', { role_id: Number(roleId), load_result: 1 });
+    setExpanded(true);
+  };
+
+  const handleCollapse = () => {
+    trackEvent('foldInfoDetail', { role_id: Number(roleId) });
+    setExpanded(false);
+  };
+
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isPulling.current) return;
     const diff = e.touches[0].clientY - pullStartY.current;
     if (diff > 60) {
       isPulling.current = false;
-      setExpanded(false);
+      handleCollapse();
     }
   };
 
@@ -78,10 +140,7 @@ export default function CharacterDetailPage() {
     return (
       <div className={styles.container}>
         <div className={styles.notFound}>
-          <p>Character not found</p>
-          <button className={styles.backLink} onClick={() => navigate('/')}>
-            Back to Explore
-          </button>
+          <p>{t.roleLoading}</p>
         </div>
       </div>
     );
@@ -89,6 +148,8 @@ export default function CharacterDetailPage() {
 
   const bgImage = role.role_image_url || role.avatar_url;
   const tags = role.tags || [];
+  const chars = Array.from(role.name);
+  const displayName = chars.length > 16 ? chars.slice(0, 16).join('') + '...' : role.name;
 
   return (
     <div className={styles.container}>
@@ -109,7 +170,7 @@ export default function CharacterDetailPage() {
             <path d="M3.825 9L9.425 14.6L8 16L0 8L8 0L9.425 1.4L3.825 7H16V9H3.825V9" fill="#C084FC"/>
           </svg>
         </button>
-        <span className={styles.headerTitle}>{role.name}</span>
+        <span className={styles.headerTitle}>{displayName}</span>
       </header>
 
       {/* Default view: name + tags + VIEW PROFILE button */}
@@ -122,8 +183,8 @@ export default function CharacterDetailPage() {
             ))}
           </div>
         )}
-        <button className={styles.viewProfileBtn} onClick={() => setExpanded(true)}>
-          <span>更多档案</span>
+        <button className={styles.viewProfileBtn} onClick={handleExpand}>
+          <span>{t.roleViewProfile}</span>
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
             <path d="M1 6.5L6 1.5L11 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -140,7 +201,7 @@ export default function CharacterDetailPage() {
         onTouchEnd={handleTouchEnd}
       >
         {/* Collapse chevron — Figma 205:1086 */}
-        <button className={styles.collapseBtn} onClick={() => setExpanded(false)} aria-label="Collapse">
+        <button className={styles.collapseBtn} onClick={handleCollapse} aria-label="Collapse">
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
             <path d="M1 1.5L6 6.5L11 1.5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -155,32 +216,32 @@ export default function CharacterDetailPage() {
           </div>
         )}
 
-        {/* Name with level badge */}
+        {/* Name with age badge */}
         <div className={styles.nameRow}>
           <h1 className={styles.nameExpanded}>{role.name}</h1>
-          <span className={styles.levelBadge}>{role.relationship}</span>
+          <span className={styles.levelBadge}>{role.age || 18}</span>
         </div>
 
         {/* Biography section */}
         <div className={styles.bioSection}>
-          <h3 className={styles.bioLabel}>Biography</h3>
+          <h3 className={styles.bioLabel}>{t.roleBio}</h3>
 
           {/* Stats grid */}
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>Occupation</span>
-              <span className={styles.statValue}>{role.relationship_label || 'Unknown'}</span>
+              <span className={styles.statLabel}>{t.roleJob}</span>
+              <span className={styles.statValue}>{role.jobs?.[0] || t.roleJobUnknown}</span>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>Intimacy</span>
+              <span className={styles.statLabel}>{t.roleIntimacy}</span>
               <div className={styles.intimacyRow}>
                 <span className={styles.intimacyLevel}>
-                  Level<br />{role.relationship}
+                  {role.relationship_label || '朋友'}
                 </span>
                 <div className={styles.progressBar}>
                   <div
                     className={styles.progressFill}
-                    style={{ width: `${Math.min((role.relationship / 10) * 100, 100)}%` }}
+                    style={{ width: `${Math.min(role.rv || 0, 100)}%` }}
                   />
                 </div>
               </div>
@@ -201,7 +262,7 @@ export default function CharacterDetailPage() {
           onClick={handleStartChat}
           disabled={selecting}
         >
-          {selecting ? 'Starting...' : '开始聊天'}
+          {selecting ? t.roleStartChatWait : t.roleStartChat}
         </button>
       </div>
     </div>

@@ -100,7 +100,6 @@
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1.4px;
-  text-transform: uppercase;
   color: #490013;
   border: none;
   cursor: pointer;
@@ -123,7 +122,6 @@
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1.4px;
-  text-transform: uppercase;
   color: #adaaaa;
   cursor: pointer;
   min-height: 48px;

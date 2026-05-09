@@ -1,6 +1,9 @@
 /* Row wrapper */
 .row {
   display: flex;
+}
+
+.row.fadeIn {
   animation: fadeIn 0.2s ease both;
 }
 
@@ -18,7 +21,7 @@
 
 /* Bubble base */
 .bubble {
-  max-width: 304px;
+  max-width: 60%;
   word-break: break-word;
 }
 
@@ -26,8 +29,11 @@
 .text {
   font-family: 'WenQuanYi Zen Hei', var(--font-body);
   font-weight: 500;
-  white-space: pre-wrap;
+  white-space: normal;
+  word-break: break-word;
   margin: 0;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* Assistant — Figma 303:62 */
@@ -39,18 +45,22 @@
   border-radius: 16px;
   border-bottom-left-radius: 0;
   box-shadow: 0 0 20px rgba(241, 131, 255, 0.1);
-  padding: 21px 39.3px 21px 25px;
+  padding: 14px 16px;
 }
 
 .assistant .text {
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
-  line-height: 26px;
+  line-height: 22.75px;
+}
+
+.actionText {
+  color: #888888;
 }
 
 /* User — Figma 303:69 */
 .user {
-  max-width: 286px;
+  max-width: 60%;
   background: rgba(42, 42, 42, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -60,7 +70,7 @@
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  padding: 13px 27.39px 13px 21px;
+  padding: 10px 16px;
 }
 
 .user .text {
@@ -73,6 +83,9 @@
 .imageMessage {
   align-self: flex-start;
   max-width: 65%;
+}
+
+.imageMessage.fadeIn {
   animation: fadeIn 0.2s ease both;
 }
 

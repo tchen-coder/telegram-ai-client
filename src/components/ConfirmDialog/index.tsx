@@ -1,3 +1,4 @@
+import { getLocale } from '../../utils/locale';
 import styles from './ConfirmDialog.module.css';
 
 interface ConfirmDialogProps {
@@ -15,12 +16,15 @@ export default function ConfirmDialog({
   open,
   title,
   message,
-  confirmText = '确认',
-  cancelText = '取消',
+  confirmText,
+  cancelText,
   onConfirm,
   onCancel,
   danger,
 }: ConfirmDialogProps) {
+  const t = getLocale();
+  const resolvedConfirm = confirmText ?? t.confirmOk;
+  const resolvedCancel = cancelText ?? t.confirmCancel;
   if (!open) return null;
 
   return (
@@ -42,10 +46,10 @@ export default function ConfirmDialog({
             className={styles.confirmBtn}
             onClick={onConfirm}
           >
-            {confirmText}
+            {resolvedConfirm}
           </button>
           <button className={styles.cancelBtn} onClick={onCancel}>
-            {cancelText}
+            {resolvedCancel}
           </button>
         </div>
       </div>

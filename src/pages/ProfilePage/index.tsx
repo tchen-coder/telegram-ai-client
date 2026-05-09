@@ -3,20 +3,20 @@ import { useApp } from '../../store/appStore';
 import styles from './ProfilePage.module.css';
 
 /* Figma 233:78 — icon assets */
-const iconSubscription = 'https://www.figma.com/api/mcp/asset/b983c40c-7457-4e51-9820-5c9dadb7787e';
-const iconChevron = 'https://www.figma.com/api/mcp/asset/3ba19321-e6bc-4348-b628-33d91bbcd828';
-const iconLock = 'https://www.figma.com/api/mcp/asset/14832130-4b03-421d-a9e8-a69d8da870a7';
-const iconHeart = 'https://www.figma.com/api/mcp/asset/1012c410-5455-4e44-8622-b549fd977afb';
-const iconPlus = 'https://www.figma.com/api/mcp/asset/10c4eab6-b30b-4c60-8cac-dc524d8d5bb5';
-const iconNotifications = 'https://www.figma.com/api/mcp/asset/fa0e572d-081c-4a5a-890f-6399d8850e00';
-const iconChevronSm = 'https://www.figma.com/api/mcp/asset/6ff020e5-4412-4d4b-aa8c-598f467b009e';
-const iconAppearance = 'https://www.figma.com/api/mcp/asset/5d156769-fba4-4eee-8286-d2fbe7ca9cda';
-const iconLanguage = 'https://www.figma.com/api/mcp/asset/e967e25e-2e85-43d6-aaf5-b43451eec365';
-const iconSupport = 'https://www.figma.com/api/mcp/asset/e39217eb-9188-4190-a665-ba9e000746c4';
+const iconSubscription = new URL('../../assets/icon-subscription.svg', import.meta.url).href;
+const iconChevron = new URL('../../assets/icon-chevron.svg', import.meta.url).href;
+const iconLock = new URL('../../assets/icon-lock.svg', import.meta.url).href;
+const iconHeart = new URL('../../assets/icon-heart.svg', import.meta.url).href;
+const iconPlus = new URL('../../assets/icon-plus.svg', import.meta.url).href;
+const iconNotifications = new URL('../../assets/icon-notifications.svg', import.meta.url).href;
+const iconChevronSm = new URL('../../assets/icon-chevron-sm.svg', import.meta.url).href;
+const iconAppearance = new URL('../../assets/icon-appearance.svg', import.meta.url).href;
+const iconLanguage = new URL('../../assets/icon-language.svg', import.meta.url).href;
+const iconSupport = new URL('../../assets/icon-support.svg', import.meta.url).href;
 
 /* Favorite character placeholder images from Figma */
-const favImgJulian = 'https://www.figma.com/api/mcp/asset/4915eb2c-326f-4929-853d-491b7d762f45';
-const favImgSera = 'https://www.figma.com/api/mcp/asset/19f5a6b4-b86d-431f-bc19-5fd7e74a2782';
+const favImgJulian = new URL('../../assets/fav-julian.jpg', import.meta.url).href;
+const favImgSera = new URL('../../assets/fav-sera.jpg', import.meta.url).href;
 
 export default function ProfilePage() {
   const { user } = useApp();

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { getLocale } from '../../utils/locale';
 import styles from './ChatInput.module.css';
 
 interface ChatInputProps {
@@ -7,6 +8,7 @@ interface ChatInputProps {
 }
 
 export default function ChatInput({ onSend, disabled }: ChatInputProps) {
+  const t = getLocale();
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -54,20 +56,22 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
             onChange={(e) => setText(e.target.value)}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder="轻声诉说你的想法..."
+            placeholder={t.chatPlaceholder}
             rows={1}
             disabled={disabled}
           />
         </div>
-        <button
-          className={styles.sendBtn}
-          onClick={(e) => { e.stopPropagation(); handleSubmit(); }}
-          disabled={disabled}
-        >
-          <svg className={styles.sendIcon} viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 16V10L8 8L0 6V0L19 8L0 16Z" fill="#41004C"/>
-          </svg>
-        </button>
+        {text.trim() && (
+          <button
+            className={styles.sendBtn}
+            onClick={(e) => { e.stopPropagation(); handleSubmit(); }}
+            disabled={disabled}
+          >
+            <svg className={styles.sendIcon} viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 16V10L8 8L0 6V0L19 8L0 16Z" fill="#41004C"/>
+            </svg>
+          </button>
+        )}
       </div>
     </div>
   );

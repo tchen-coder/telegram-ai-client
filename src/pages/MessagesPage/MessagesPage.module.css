@@ -1,17 +1,23 @@
-/* ===== Header — Figma 239:499 ===== */
+/* ===== Header ===== */
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 50;
-  display: flex;
-  align-items: center;
-  padding: 16px 24px;
+  background: #0e0e0e;
+}
+
+.headerInner {
+  padding: 16px 16px;
   padding-top: calc(var(--safe-top) + 16px);
-  background: rgba(14, 14, 14, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (min-width: 768px) {
+  .headerInner {
+    max-width: 744px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 0;
+  }
 }
 
 .title {
@@ -24,20 +30,26 @@
 }
 
 .headerDivider {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   height: 1px;
   background: rgba(72, 72, 71, 0.15);
 }
 
-/* ===== Main content area — Figma 239:405 ===== */
+/* ===== Main content area ===== */
 .main {
-  padding: 16px 16px 128px;
+  padding: 8px 16px 128px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .main {
+    max-width: 744px;
+    margin: 0 auto;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .loading {
@@ -63,7 +75,51 @@
   min-height: 112px;
 }
 
-/* ===== Delete Background — Figma 239:425 ===== */
+/* PC: hover delete button (no swipe) */
+.hoverDeleteBtn {
+  display: none;
+}
+
+/* Context menu */
+.contextMenu {
+  position: fixed;
+  z-index: 200;
+  min-width: 160px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  animation: contextMenuIn 0.12s ease;
+}
+
+@keyframes contextMenuIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.contextMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #f183ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: left;
+}
+
+.contextMenuItem:hover {
+  background: rgba(241, 131, 255, 0.08);
+}
+
+/* ===== Delete Background ===== */
 .deleteBg {
   position: absolute;
   inset: 0;
@@ -72,7 +128,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 32px;
+  padding-right: 24px;
   z-index: 0;
 }
 
@@ -85,7 +141,6 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: opacity 0.15s;
 }
 
 .deleteBtn:active {
@@ -97,11 +152,12 @@
   font-size: 10px;
   color: #fff;
   letter-spacing: -0.5px;
-  text-transform: uppercase;
 }
 
-/* ===== Chat Content (swipeable) — Figma 239:413 / 239:431 ===== */
+/* ===== Chat Content (position:absolute 铺满 wrapper，滑动时露出底层红色) ===== */
 .chatContent {
+  position: absolute;
+  inset: 0;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -109,12 +165,10 @@
   background: #101010;
   border-radius: 24px;
   cursor: pointer;
-  position: relative;
   z-index: 1;
-  will-change: transform;
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y;
-  transition: background 0.15s;
+  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), background 0.2s;
 }
 
 .chatContent.pressing {
@@ -126,11 +180,9 @@
 }
 
 
-/* Swiped state — Figma 239:431 */
+/* Swiped state */
 .chatContent.swiped {
   background: #20201f;
-  border-left: 2px solid rgba(241, 131, 255, 0.4);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Avatar — 4:5 ratio, 64x80 ===== */
@@ -203,7 +255,6 @@
   font-size: 10px;
   color: #767575;
   letter-spacing: 1px;
-  text-transform: uppercase;
 }
 
 .preview {
@@ -367,7 +418,6 @@
   font-weight: 500;
   color: #000;
   letter-spacing: 0.7px;
-  text-transform: uppercase;
   border: none;
   cursor: pointer;
   transition: transform 0.15s;

@@ -1,8 +1,54 @@
+/* Centered wrapper — mobile: no constraint; PC: cap width */
+.contentWrapper {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .contentWrapper {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
+
+/* Hero wrapper — sticky, aligned with card content */
+.heroWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-primary);
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Hero Section */
 .hero {
   padding: 0 var(--page-padding-x);
   padding-top: 16px;
   padding-bottom: 16px;
+}
+
+/* PC: align hero left edge with card grid */
+@media (min-width: 768px) and (max-width: 899px) {
+  .hero {
+    max-width: calc(240px * 2 + 12px);
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    max-width: calc(240px * 3 + 12px * 2);
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .heroTitle {
@@ -22,7 +68,6 @@
   font-size: 16px;
   color: var(--text-figma-secondary);
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   line-height: 24px;
   opacity: 0.7;
   margin-top: 8px;
@@ -71,7 +116,11 @@
   color: var(--text-chip-active);
 }
 
-/* Card List — single column full width */
+/* =============================================
+   Card List
+   Mobile (<768px): single column, full width
+   PC (≥768px):     fixed-width columns, centered
+   ============================================= */
 .cardList {
   display: flex;
   flex-direction: column;
@@ -80,13 +129,77 @@
   padding-bottom: 24px;
 }
 
-/* Skeleton Loading */
+/* PC — 2 cols (768–899px) */
+@media (min-width: 768px) and (max-width: 899px) {
+  .cardList {
+    display: grid;
+    grid-template-columns: repeat(2, 240px);
+    gap: 12px;
+    justify-content: center;
+    align-items: start;
+    max-width: calc(240px * 2 + 12px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 24px;
+  }
+}
+
+/* PC — 3 cols (≥900px) */
+@media (min-width: 900px) {
+  .cardList {
+    display: grid;
+    grid-template-columns: repeat(3, 240px);
+    gap: 12px;
+    justify-content: center;
+    align-items: start;
+    max-width: calc(240px * 3 + 12px * 2);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 24px;
+  }
+}
+
+
+/* =============================================
+   Skeleton Loading
+   ============================================= */
 .skeleton {
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 0 var(--page-padding-x);
 }
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .skeleton {
+    display: grid;
+    grid-template-columns: repeat(2, 240px);
+    gap: 12px;
+    justify-content: center;
+    max-width: calc(240px * 2 + 12px);
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .skeleton {
+    display: grid;
+    grid-template-columns: repeat(3, 240px);
+    gap: 12px;
+    justify-content: center;
+    max-width: calc(240px * 3 + 12px * 2);
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 
 .skeletonCard {
   border-radius: var(--radius-md);
@@ -97,7 +210,7 @@
 
 .skeletonImage {
   width: 100%;
-  aspect-ratio: 340 / 425;
+  aspect-ratio: 4 / 5;
   background: linear-gradient(90deg, var(--bg-elevated) 25%, #333 50%, var(--bg-elevated) 75%);
   background-size: 400px 100%;
   animation: shimmer 1.5s infinite;
@@ -237,6 +350,19 @@
   text-align: center;
   line-height: 29.25px;
   margin: 0;
+  white-space: pre-line;
+}
+
+.retryBtn {
+  margin-top: 24px;
+  padding: 12px 32px;
+  border-radius: var(--radius-full);
+  background: var(--accent-pink);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
 /* Load More — sentinel + spinner */

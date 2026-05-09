@@ -6,8 +6,9 @@ interface CharacterCardProps {
   onClick: () => void;
 }
 
-function truncateName(name: string, max: number = 15): string {
-  return name.length > max ? name.slice(0, max) + '...' : name;
+function truncateName(name: string, max: number = 16): string {
+  const chars = Array.from(name);
+  return chars.length > max ? chars.slice(0, max).join('') + '...' : name;
 }
 
 export default function CharacterCard({ role, onClick }: CharacterCardProps) {
@@ -29,21 +30,6 @@ export default function CharacterCard({ role, onClick }: CharacterCardProps) {
           <div className={styles.placeholder} />
         )}
         <div className={styles.saturationOverlay} />
-        {/* Gradient overlay at bottom for tags */}
-        {tags.length > 0 && (
-          <div className={styles.gradientOverlay}>
-            <div className={styles.tags}>
-              {tags.slice(0, 3).map((tag, i) => (
-                <span
-                  key={tag}
-                  className={i === 0 ? styles.tagSolid : styles.tagGlass}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Info Area */}

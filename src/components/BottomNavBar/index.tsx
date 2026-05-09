@@ -1,23 +1,25 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getLocale } from '../../utils/locale';
 import styles from './BottomNavBar.module.css';
 
 /* Figma 248:545 — image assets for tab icons */
-const exploreIcon = 'https://www.figma.com/api/mcp/asset/5a0df75b-1fa0-472a-89b1-5f800f3b9022';
-const chatIcon = 'https://www.figma.com/api/mcp/asset/e51fb3a1-09b1-4d56-bc7b-4d5413814a30';
-const profileIcon = 'https://www.figma.com/api/mcp/asset/a541b683-459e-4759-aff5-e822597d86e5';
+const exploreIcon = new URL('../../assets/tab-explore.svg', import.meta.url).href;
+const chatIcon = new URL('../../assets/tab-chat.svg', import.meta.url).href;
 
-const tabs = [
-  { path: '/', label: '探索', icon: exploreIcon, iconW: 20, iconH: 24 },
-  { path: '/messages', label: '聊天', icon: chatIcon, iconW: 20, iconH: 24 },
-  { path: '/profile', label: '个人', icon: profileIcon, iconW: 16, iconH: 20 },
-] as const;
+const isTelegram = !!window.Telegram?.WebApp;
 
 export default function BottomNavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const t = getLocale();
+
+  const tabs = [
+    { path: '/', label: t.navExplore, icon: exploreIcon, iconW: 20, iconH: 24 },
+    { path: '/messages', label: t.navChat, icon: chatIcon, iconW: 20, iconH: 24 },
+  ] as const;
 
   return (
-    <nav className={styles.nav}>
+    <nav className={`${styles.nav} ${isTelegram ? styles.telegram : ''}`}>
       <div className={styles.shell}>
         {tabs.map((tab) => {
           const active = location.pathname === tab.path;
